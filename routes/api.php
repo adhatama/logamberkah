@@ -46,8 +46,8 @@ Route::get('/harga-kami-jual/{logamType}', function ($logamType, Request $reques
         $report = new PriceList(
             new HargaDasarKamiJualEmasCertiCardSqlite,
             [
-                new PercentageMarginCalculator(new HargaDasarKamiBeliEmasCertiCardSqlite),
-                new NominalMarginCalculator(new HargaDasarKamiBeliEmasCertiCardSqlite)
+                new PercentageMarginCalculator(new HargaDasarKamiJualEmasCertiCardSqlite),
+                new NominalMarginCalculator(new HargaDasarKamiJualEmasCertiCardSqlite)
             ]
         );
     }
