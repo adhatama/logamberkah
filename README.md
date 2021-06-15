@@ -1,4 +1,4 @@
-# Logam Berkah
+# Logam Berkah (In Progress)
 
 Aplikasi untuk orang yang mau buka toko emas.
 Bisa menampilkan harga emas ke customer yang mau jual atau beli emasnya.
@@ -130,6 +130,7 @@ Method dalam suatu class juga sering kita sebut sebagai **behavior**.
 
 Untuk memulai mendesain OO, kita harus mulai dengan behavior apa yang kita inginkan.  
 Dalam kasus Logam Berkah, kita kan ingin nampilin daftar harga ya, berarti kita butuh semacam behavior `getHargaInGrams()`.  
+Karena ada dua jenis harga: harga kami beli dan harga kami jual, kita mulai dulu dari menentukan **harga kami beli**, jadinya `getHargaKamiBeliInGrams()`.  
 Terus gimana kita nentuin behavior itu ditaruh di class apa?  
 Nah ini aku juga masih belum tau hehe, tapi dikira-kira aja lah, misal kamu ke toko emas, pengen nanya harga, kan kamu mesti nanya gini, 
 "Mbak, boleh lihat PriceList nya ga?"  
@@ -139,7 +140,7 @@ Jadi kita bisa bikin aja begini
 ```
 class PriceList
 {
-    public function getHargaInGrams()
+    public function getHargaKamiBeliInGrams()
     {
         return [
             1 => 900000,
@@ -149,5 +150,190 @@ class PriceList
     }
 }
 ```
+
+Selanjutnya, data harga itu kita dapat dari mana?
+Dari situs resmi Antam. Berupa harga dasar yang belum dimodif.
+Berarti kita butuh behavior misalkan `getHargaDasarInGrams()`.
+Terus class nya apa? Kan itu kita ngambil dari semacam data storage ya. 
+Kita bikin class aja `HargaDasarKamiBeliStorage`
+
+```
+class HargaDasarKamiBeliStorage
+{
+    public function getHargaDasarInGrams()
+    {
+        return [
+            1 => 900000,
+            2 => 1800000,
+            3 => 2700000
+        ];
+    }
+}
+
+class PriceList
+{
+    public function getHargaInGrams()
+    {
+        $storage = new HargaDasarKamiBeliStorage();
+        return $storage->getHargaDasarInGrams();
+    }
+}
+```
+
+### Repository
+
+Pasti kalian sudah menyadari, yak, `HargaDasarKamiBeliStorage` itu mirip dengan Repository pattern. Semacam layer untuk mengabstraksi interaksi ke database biasanya.
+
+Poin penting dari Repository adalah return value.
+Kesalahan yang sering terjadi ketika return value dari Repository berupa Eloquent. Hal itu menghilangkan konsep abstraksi dari Repository karena return value berupa Eloquent model dimana Eloquent itu termasuk dari detail implementasi. Sehingga class yang manggil Repository dipaksa harus berinteraksi dengan Eloquent juga.
+
+Jadi bukan begini
+```
+class HargaDasarKamiBeliStorage
+{
+    public function getHargaDasarInGrams()
+    {
+        return HargaDasar::all();
+    }   
+}
+```
+
+tapi lebih baik kita mapping ke array. Sehingga kita tidak terikat dengan Eloquent.
+```
+class HargaDasarKamiBeliStorage
+{
+    public function getHargaDasarInGrams()
+    {
+        $result = [];
+        $hargaDasar = HargaDasar::orderBy('date', 'desc')->get();
+
+        // Atau kita bisa pindah mapping ini ke method private baru di class yang sama.
+        foreach ($hargaDasar as $row) {
+            $result[] = [
+                'harga' => $row->harga,
+                'gram' => $row->gram,
+            ]
+        }
+
+        return $result;
+    }   
+}
+```
+
+Namun yang paling baik adalah kita mapping ke suatu class yang merepresentasikan bisnis aplikasi.
+```
+class HargaDasarKamiBeliStorage
+{
+    public function getHargaDasarInGrams()
+    {
+        $result = [];
+        $hargaDasar = HargaDasar::orderBy('date', 'desc')->get();
+
+        foreach ($hargaDasar as $row) {
+            $result[] = new Emas($row->harga, $row->gram);
+        }
+
+        return $result;
+    }   
+}
+```
+
+Dengan begini, nantinya, jika kita punya class baru yang punya method `getHargaDasarInGrams()` dan return value berupa array of `Emas`, kita bisa tukar class tersebut dengan `HargaDasarKamiBeliStorage`.  
+
+### Class Emas
+
+Kita menemukan satu class baru, yaitu class `Emas`. 
+
+Class `Emas` merupakan suatu konsep bisnis penting dari aplikasi.  
+Coba bayangkan sebuah emas. Biasanya sebuah emas itu punya informasi apa aja?  
+1. Berat
+2. Harga
+
+Jadi class nya seperti ini
+```
+class Emas
+{
+    public $harga;
+    pulic $gram;
+
+    public function __construct($harga, $gram)
+    {
+        $this->harga = $harga;
+        $this->gram = $gram;
+    }
+}
+```
+
+Kita akan kembali ke class ini nanti.
+
+### So far kita punya class begini
+
+```
+class Emas
+{
+    public $harga;
+    pulic $gram;
+
+    public function __construct($harga, $gram)
+    {
+        $this->harga = $harga;
+        $this->gram = $gram;
+    }
+}
+
+class HargaDasarKamiBeliStorage
+{
+    public function getHargaDasarInGrams()
+    {
+        $result = [];
+        $hargaDasar = HargaDasar::orderBy('date', 'desc')->get();
+
+        foreach ($hargaDasar as $row) {
+            $result[] = new Emas($row->harga, $row->gram);
+        }
+
+        return $result;
+    }
+}
+
+class PriceList
+{
+    public function getHargaInGrams()
+    {
+        $storage = new HargaDasarKamiBeliStorage();
+        return $storage->getHargaDasarInGrams();
+    }
+}
+```
+
+Mari lanjut ke next requirement
+
+### Margin Calculator
+
+Requirement bilang kalau aplikasi ini harus menampilkan harga dasar yang sudah dihitung dengan margin.  
+Maka kita akan coba hitung margin dari harga dasar emas dari object `Emas` di `PriceList`.  
+Margin ini seharusnya configurable, artinya bisa diubah oleh pemilik toko sewaktu-waktu. Jadi kita simpan aja margin tersebut di DB. Anggap aja ada halaman admin untuk ngeset margin tersebut, dan data margin sudah ada di DB.
+```
+class PriceList
+{
+    public function getHargaInGrams()
+    {
+        $storage = new HargaDasarKamiBeliStorage();
+        $emasList = $storage->getHargaDasarInGrams();
+
+        $margin = $storage->getMargin();
+
+        $calculatedEmas = [];
+        foreach ($emasList as $i => $emas) {
+            $hargaBaru = $emas->harga + $margin;
+            $calculatedEmas[] = new Emas($hargaBaru, $emas->gram);
+        }
+
+        return $calculatedEmas;
+    }
+}
+```
+
+
 
 ![tobecon](tobecon.png)
