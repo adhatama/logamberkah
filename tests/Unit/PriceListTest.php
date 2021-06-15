@@ -13,16 +13,16 @@ class PriceListTest extends TestCase
         $marginCalculatorMock = Mockery::mock('MarginCalculatorMock');
 
         $emas1 = Mockery::mock('Emas1');
-        $emas1->shouldReceive('getCalculatedHarga')
-            ->with([$marginCalculatorMock])
-            ->andReturn(1500);
+        $emas1->shouldReceive('calculateHarga')
+            ->with([$marginCalculatorMock]);
         $emas1->gram = 1;
+        $emas1->harga = 1500;
 
         $emas2 = Mockery::mock('Emas2');
-        $emas2->shouldReceive('getCalculatedHarga')
-            ->with([$marginCalculatorMock])
-            ->andReturn(2500);
+        $emas2->shouldReceive('calculateHarga')
+            ->with([$marginCalculatorMock]);
         $emas2->gram = 2;
+        $emas2->harga = 2500;
 
         $dataSourceMock = Mockery::mock('DataSource');
         $dataSourceMock->shouldReceive('getHargaDasarInGrams')
@@ -34,9 +34,9 @@ class PriceListTest extends TestCase
         $priceList = new PriceList($dataSourceMock, [$marginCalculatorMock]);
         $hargaInGrams = $priceList->getHargaInGrams();
 
-        $this->assertEquals(1500, $hargaInGrams[1]['harga']);
-        $this->assertEquals(1, $hargaInGrams[1]['gram']);
-        $this->assertEquals(2500, $hargaInGrams[2]['harga']);
-        $this->assertEquals(2, $hargaInGrams[2]['gram']);
+        $this->assertEquals(1500, $hargaInGrams[0]->harga);
+        $this->assertEquals(1, $hargaInGrams[0]->gram);
+        $this->assertEquals(2500, $hargaInGrams[1]->harga);
+        $this->assertEquals(2, $hargaInGrams[1]->gram);
     }
 }

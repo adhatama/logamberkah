@@ -17,13 +17,11 @@ class PriceList
     {
         $logamInGrams = $this->dataSource->getHargaDasarInGrams();
 
-        return collect($logamInGrams)->mapWithKeys(function ($logam) {
-            return [
-                (string) $logam->gram => [
-                    'gram' => $logam->gram,
-                    'harga' => $logam->getCalculatedHarga($this->hargaCalculators),
-                ]
-            ];
-        })->toArray();
+        foreach ($logamInGrams as $i => $logam) {
+            $logam->calculateHarga($this->hargaCalculators);
+            $logamInGrams[$i] = $logam;
+        }
+
+        return $logamInGrams;
     }
 }

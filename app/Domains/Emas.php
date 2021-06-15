@@ -13,13 +13,13 @@ class Emas
         $this->gram = $gram;
     }
 
-    public function getCalculatedHarga($calculators)
+    public function calculateHarga($calculators)
     {
         $totalMargin = 0;
         foreach ($calculators as $calculator) {
             $totalMargin += $calculator->getCalculatedMargin($this);
         }
 
-        return $this->harga += $totalMargin;
+        $this->harga += $totalMargin;
     }
 }

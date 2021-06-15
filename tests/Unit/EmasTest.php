@@ -16,14 +16,14 @@ class EmasTest extends TestCase
         $marginPositiveCalcMock->shouldReceive('getCalculatedMargin')
             ->with($emas)
             ->andReturn(500);
-        
+
         $marginNegativeCalcMock = Mockery::mock('MarginNegativeCalcMock');
         $marginNegativeCalcMock->shouldReceive('getCalculatedMargin')
             ->with($emas)
             ->andReturn(-200);
 
-        $harga = $emas->getCalculatedHarga([$marginPositiveCalcMock, $marginNegativeCalcMock]);
+        $emas->calculateHarga([$marginPositiveCalcMock, $marginNegativeCalcMock]);
 
-        $this->assertEquals(1300, $harga);
+        $this->assertEquals(1300, $emas->harga);
     }
 }
