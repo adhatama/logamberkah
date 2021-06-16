@@ -6,51 +6,75 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="/tailwind.css">
+    <link rel="stylesheet" href="/assets/tailwind.css">
 
     <style>
-        
+
     </style>
 </head>
 
 <body>
-    <div class="p-6 max-w-sm mx-auto bg-white rounded-xl shadow-md flex items-center space-x-4">
-        <div class="flex-shrink-0">
-            <img class="h-12 w-12" src="/chitchat.png" alt="ChitChat Logo">
-        </div>
-        <div>
-            <div class="text-xl font-medium text-black">ChitChat</div>
-            <p class="text-gray-500">You have a new message!</p>
-        </div>
-    </div>
-
-    <br>
-    <div
-        class="py-8 px-8 max-w-sm mx-auto bg-white rounded-xl shadow-md space-y-2 sm:py-4 sm:flex sm:items-center sm:space-y-0 sm:space-x-6">
-        <img class="block mx-auto h-24 rounded-full sm:mx-0 sm:flex-shrink-0" src="/chitchat.png" alt="Woman's Face">
-        <div class="text-center space-y-2 sm:text-left">
-            <div class="space-y-0.5">
-                <p class="text-lg text-black font-semibold">
-                    Erin Lindford
+    <section class="hero py-20">
+        <div class="flex items-center px-10 bg-green-500" style="height: 70vh">
+            <div class="flex-1 ml-40 text-white">
+                <h1 class="text-4xl font-black">
+                    Logam Berkah
+                </h1>
+                <p class="text-2xl pt-5">
+                    Beli emas tak pernah se-syariah ini
                 </p>
-                <p class="text-gray-500 font-medium">
-                    Product Engineer
-                </p>
+                <div class="flex mt-5">
+                    <div class="flex flex-col mr-5">
+                        <div class="font-bold">Harga Kami Jual</div>
+                        <div class="text-xl">Rp900.000</div>
+                    </div>
+                    <div class="flex flex-col">
+                        <div class="font-bold">Harga Kami Beli</div>
+                        <div class="text-xl">Rp840.000</div>
+                    </div>
+                </div>
             </div>
-            <button
-                class="px-4 py-1 text-sm text-purple-600 font-semibold rounded-full border border-purple-200 hover:text-white hover:bg-purple-600 hover:border-transparent focus:outline-none focus:ring-2 focus:ring-purple-600 focus:ring-offset-2">Message</button>
+            <div class="flex-1">
+                <div class="grid grid-cols-6 shadow-lg bg-white rounded-xl px-5 py-5">
+                    <div class="col-span-3">
+                        <h2 class="text-xl pb-3 font-bold">Simulator emas certicard</h2>
+
+                        <table class="table-fixed">
+                            <tbody>
+                                @foreach (range(1, 8) as $row)
+                                <tr>
+                                    <td class="pr-10 py-1 text-left">{{ $row }} gram</td>
+                                    <td class="pr-10">Rp900.000</td>
+                                    <td class="">
+                                        <input type="text" class="w-10 shadow-lg text-center">
+                                    </td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+
+                        <h4 class="mt-5">Total Gram: 10 gram</h4>
+                        <h4>Total: Rp100.000.000</h4>
+                    </div>
+
+                    <div class="col-span-3 mx-10">
+                        <h2 class="text-md pb-3 font-bold mt-1">Catatan</h2>
+                        <p class="text-sm">
+                            Harga LM dapat berubah setiap saat tanpa pemberitahuan terlebih dahulu
+                            <br>
+                            Simulasi perhitungan di atas hanya berupa ilustrasi saja
+                            <br>
+                            Untuk kepastian harga & ketersediaan LM silakan hubungi petugas kami
+                        </p>
+
+                        <button class="mt-5 btn-green">
+                            Transaksi Sekarang!
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
-
-    <!-- Using utilities -->
-    <button class="py-2 px-4 font-semibold rounded-lg shadow-md text-white bg-green-500 hover:bg-green-700">
-        Click me
-    </button>
-
-    <!-- Extracting classes using @apply -->
-    <button class="btn btn-green">
-        Button
-    </button>
+    </section>
 </body>
 
 </html>
