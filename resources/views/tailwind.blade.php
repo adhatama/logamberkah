@@ -46,7 +46,7 @@
                                     <td class="pr-10 py-1 text-left">{{ $row }} gram</td>
                                     <td class="pr-10">Rp900.000</td>
                                     <td class="">
-                                        <input type="text" class="w-10 shadow-lg text-center">
+                                        <input type="number" class="w-10 shadow-lg text-center" value="0">
                                     </td>
                                 </tr>
                                 @endforeach
@@ -59,16 +59,14 @@
 
                     <div class="col-span-3 mx-10">
                         <h2 class="text-md pb-3 font-bold mt-1">Catatan</h2>
-                        <p class="text-sm">
-                            Harga LM dapat berubah setiap saat tanpa pemberitahuan terlebih dahulu
-                            <br>
-                            Simulasi perhitungan di atas hanya berupa ilustrasi saja
-                            <br>
-                            Untuk kepastian harga & ketersediaan LM silakan hubungi petugas kami
-                        </p>
+                        <ul class="text-sm list-disc">
+                            <li>Harga LM dapat berubah setiap saat tanpa pemberitahuan terlebih dahulu</li>
+                            <li>Simulasi perhitungan di atas hanya berupa ilustrasi saja</li>
+                            <li>Untuk kepastian harga & ketersediaan LM silakan hubungi petugas kami</li>
+                        </ul>
 
                         <button class="mt-5 btn-green">
-                            Transaksi Sekarang!
+                            Transaksi via WhatsApp Sekarang!
                         </button>
                     </div>
                 </div>
