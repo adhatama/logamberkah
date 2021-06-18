@@ -42,7 +42,7 @@
                 <div class="ui small inverted statistics" style="margin-top: 2rem;">
                     <div class="statistic" style="padding-right: 1em">
                         <div class="value">
-                            960.000
+                            {{ price_format($hargaKamiJualEmasCerticard1Gr->harga) }}
                         </div>
                         <div class="label">
                             Harga Kami Jual / gr
@@ -50,7 +50,7 @@
                     </div>
                     <div class="statistic">
                         <div class="value">
-                            850.000
+                            {{ price_format($hargaKamiBeliEmasCerticard1Gr->harga) }}
                         </div>
                         <div class="label">
                             Harga Kami Beli / gr
@@ -67,13 +67,13 @@
 
                             <table class="ui very compact padded very basic table">
                                 <tbody>
-                                    @foreach (range(1, 8) as $row)
+                                    @foreach ($hargaKamiJualEmasCerticardList as $row)
                                     <tr>
-                                        <td class="four wide">{{ $row }} gram</td>
-                                        <td class="five wide">Rp900.000</td>
+                                        <td class="four wide">{{ $row->gram }} gram</td>
+                                        <td class="five wide">{{ price_format($row->harga, 'Rp') }}</td>
                                         <td class="three wide">
                                             <div class="ui fluid tiny input">
-                                                <input type="text" value="0" style="text-align: center">
+                                                <input class="input-gram" data-harga="{{ $row->harga }}" type="text" value="0" style="text-align: center" oninput="calculateTotal()">
                                             </div>
                                         </td>
                                     </tr>
@@ -83,10 +83,10 @@
 
                             <div class="ui list">
                                 <div class="item">
-                                    <h4>Total Gram: 10 gram</h4>
+                                    <h4>Total Gram: <span id="total-gram">0</span> gram</h4>
                                 </div>
                                 <div class="item">
-                                    <h4>Total: Rp100.000.000</h4>
+                                    <h4>Total: Rp<span id="total-harga">0</span></h4>
                                 </div>
                             </div>
                         </div>
@@ -114,6 +114,26 @@
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
     {{-- <script src="https://cdn.jsdelivr.net/npm/fomantic-ui@2.8.7/dist/semantic.min.js"></script> --}}
     <script src="/semantic/semantic.min.js"></script>
+
+    <script>
+        var total = 0;
+        function calculateTotal(harga) {
+            let totalGram = 0;
+            let totalHarga = 0;
+            $('.input-gram').each(function (item) {
+                totalGram += parseInt($(this).val())
+                totalHarga += $(this).data('harga') * $(this).val()
+            })
+
+            totalGram = totalGram ? totalGram : 0
+            totalHarga = totalHarga ? totalHarga : 0
+            // var nf = new Intl.NumberFormat();
+            // $('#total-gram').html(nf.format(totalGram))
+            // $('#total-harga').html(nf.format(totalHarga))
+            $('#total-gram').html(totalGram.toLocaleString('id-ID'))
+            $('#total-harga').html(totalHarga.toLocaleString('id-ID'))
+        }
+    </script>
 </body>
 
 </html>
