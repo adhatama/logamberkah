@@ -1,5 +1,4 @@
 vendor/
 .env
 .phpunit.result.cache
-logamberkah.sqlite
 node_modules/
