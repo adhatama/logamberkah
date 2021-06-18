@@ -5,10 +5,11 @@ Bisa menampilkan harga emas ke customer yang mau jual atau beli emasnya.
 Harga dasar emas ngambil dari situs resmi Antam: logammulia.com.
 Dari harga dasar itu, kita bisa kasih margin buat si toko biar untung (atau kalau mau rugi juga bisa)
 
-Tapi tujuan aplikasi ini di-open source kan sebenernya adalah untuk menunjukkan **a better way to do Object Oriented**.
+Tapi tujuan aplikasi ini di-open source kan sebenernya adalah untuk menunjukkan **a better way to do Object Oriented**, khususnya di PHP.
 
 ## Tech Stack
 
+- PHP 7.2 <= n < 8.x
 - Laravel 7, belum pakai 8
 - DB Sqlite yang simple setupnya
 
@@ -25,8 +26,7 @@ Tapi tujuan aplikasi ini di-open source kan sebenernya adalah untuk menunjukkan 
 
 Buat yang belum tau aja, sekarang emas ada versi barunya, namanya Emas Certicard.
 Itu emas yang ga bisa dilepas dari wadahnya. Ya bisa sih dilepas, tapi nanti jadi turun harganya.
-Karena wadahnya itu memang didesain sedemikian rupa agar kalau sekali dibuka nanti akan ketauan kalau pernah dibuka.
-Ibarat ketika kita mukulin paku ke kayu, maka lubangnya ga bisa dibalikin lagi. Sama juga seperti ketika kita melukai orang, otak boleh memaafkan, tapi perasaan gabisa lupa.
+Karena wadahnya itu memang didesain sedemikian rupa agar kalau sekali dibuka nanti akan ketauan kalau pernah dibuka.  
 Tujuannya sudah jelas, biar ga dipalsu.
 
 Lalu ada juga emas yang batangannya bisa dipegang terus ada kertas penjelasannya. Itu yang versi lama.
@@ -76,7 +76,7 @@ Contoh response
 Sudah jelas ya itu endpoint gunanya untuk apa.
 
 Nah, **requirement pertama** itu begini:
-1. Kita pengen bisa munculin harga emas certicard, baik harga kami beli atau harga kami jual.
+1. Kita pengen bisa munculin harga emas certicard dan emas versi lama, baik harga kami beli atau harga kami jual.
    - Di sini kita pakai bahasa **harga kami beli** dan **harga kami jual** dimana **kami** itu merujuk pada si toko. Soalnya suka bingung sayanya. 
 2. Harga emas itu harganya diambil dari website resmi Antam: logammulia.com
    - Harga emas yang dari Antam itu kita sebut sebagai **harga dasar**, yaitu harga yang belum dikasih margin toko
@@ -102,7 +102,7 @@ Semua hal di atas mengekang kita untuk bebas menterjemahkan requirement ke dalam
 
 Selanjutnya, langkah kedua, kita akan 
 - Bikin satu folder, Domains, dimana semua class akan kita buat di situ.  
-   - Folder ini menjaga pikiran kita untuk milih class X akan kita taruh mana. Pokoknya semua taruh situ dulu.
+   - Folder ini menjaga pikiran dari potensi kebingungan ketika milih class X mau ditaruh di mana. Pokoknya semua taruh folder DOmains dulu.
 
 ### Saatnya mengabstraksi
 
@@ -119,21 +119,21 @@ Satu class bisa melakukan segala hal.
 Lupakan bikin unit test, karena test yang kita buat lebih kompleks dari kodenya sendiri.  
 
 Maka kita perlu lebih sadar tentang **abstraksi** ketika membuat class-class.
-Abstraksi itu kaya saklar lampu, hapemu saat dipakai telepon, atau pas kamu nyetir mobil.
-Kita berinteraksi dengan interface yang mudah dipakai kita sebagai pengguna, namun dibalik kemudahan itu, ada hal yang sangat kompleks agar lampu bisa menyala, suaramu sampai di hape pacarmu, atau mobil bisa jalan hanya dengan diinjak pedalnya. Dan kita ga perlu paham koneksi AC-DC berapa watt daya yang dibutuhkan untuk lampu itu bisa nyala kan?
+Abstraksi itu seperti saklar lampu, seperti hapemu saat dipakai telepon, atau seperti pas kamu nyetir mobil.
+Kita berinteraksi dengan interface yang mudah sebagai pengguna, namun dibalik kemudahan itu, ada hal yang lebih kompleks agar lampu bisa menyala, suaramu sampai di hape pacarmu, atau mobil bisa jalan hanya dengan diinjak pedalnya. Dan kita ga perlu paham koneksi AC-DC berapa watt daya yang dibutuhkan untuk lampu itu bisa nyala kan?
 
-Di dalam class-class yang kita buat, kita akan selalu menggunakan konsep abstraksi dimana ketika kita memanggil suatu class, maka kita hanya akan peduli dengan apa yang kita kirim dan apa yang akan kita terima.  
+Di dalam class-class yang kita buat, kita akan selalu menggunakan konsep abstraksi dimana **ketika kita memanggil suatu class, maka kita hanya akan peduli dengan apa yang kita kirim dan apa yang akan kita terima.**  
 Konsep kita kirim perintah itu seperti kita memanggil suatu method. Dan apa yang kita terima adalah return value dari method tersebut.  
 Method dalam suatu class juga sering kita sebut sebagai **behavior**.
 
 ### Saatnya memulai desain beneran
 
-Untuk memulai mendesain OO, kita harus mulai dengan behavior apa yang kita inginkan.  
+**Untuk memulai mendesain OO, kita harus mulai dengan behavior apa yang kita inginkan.**  
 Dalam kasus Logam Berkah, kita kan ingin nampilin daftar harga ya, berarti kita butuh semacam behavior `getHargaInGrams()`.  
 Karena ada dua jenis harga: harga kami beli dan harga kami jual, kita mulai dulu dari menentukan **harga kami beli**, jadinya `getHargaKamiBeliInGrams()`.  
 Terus gimana kita nentuin behavior itu ditaruh di class apa?  
 Nah ini aku juga masih belum tau hehe, tapi dikira-kira aja lah, misal kamu ke toko emas, pengen nanya harga, kan kamu mesti nanya gini, 
-"Mbak, boleh lihat PriceList nya ga?"  
+"Mbak, boleh lihat `PriceList` nya ga?"  
 "Oh maaf kak hanya buat yang mau beli aja"  
 
 Jadi kita bisa bikin aja begini
@@ -151,14 +151,14 @@ class PriceList
 }
 ```
 
-Selanjutnya, data harga itu kita dapat dari mana?
-Dari situs resmi Antam. Berupa harga dasar yang belum dimodif.
-Berarti kita butuh behavior misalkan `getHargaDasarInGrams()`.
-Terus class nya apa? Kan itu kita ngambil dari semacam data storage ya. 
-Kita bikin class aja `HargaDasarKamiBeliStorage`
+Selanjutnya, data harga itu kita dapat dari mana?  
+Dari situs resmi Antam. Berupa harga dasar yang belum dimodif.  
+Berarti kita butuh behavior misalkan `getHargaDasarInGrams()`.  
+Terus class nya apa? Kan itu kita ngambil dari semacam data source ya, bisa dari third-party API, file biasa, atau database.  
+Kita bikin class aja `HargaDasarKamiBeliDatasource`  
 
 ```
-class HargaDasarKamiBeliStorage
+class HargaDasarKamiBeliDatasource
 {
     public function getHargaDasarInGrams()
     {
@@ -174,7 +174,7 @@ class PriceList
 {
     public function getHargaInGrams()
     {
-        $storage = new HargaDasarKamiBeliStorage();
+        $storage = new HargaDasarKamiBeliDatasource();
         return $storage->getHargaDasarInGrams();
     }
 }
@@ -182,14 +182,18 @@ class PriceList
 
 ### Repository
 
-Pasti kalian sudah menyadari, yak, `HargaDasarKamiBeliStorage` itu mirip dengan Repository pattern. Semacam layer untuk mengabstraksi interaksi ke database biasanya.
+Pasti kalian sudah menyadari, yak, `HargaDasarKamiBeliDatasource` itu mirip dengan Repository pattern. Semacam layer untuk mengabstraksi interaksi ke database biasanya.  
+
+> Note: Kita abaikan dulu perdebatan apa itu sebenarnya Repository Pattern dan bagaimana implementasi yang benar sesuai sumber awalnya. Di sini, Repository adalah class untuk mengabstraksi akses ke data
 
 Poin penting dari Repository adalah return value.
-Kesalahan yang sering terjadi ketika return value dari Repository berupa Eloquent. Hal itu menghilangkan konsep abstraksi dari Repository karena return value berupa Eloquent model dimana Eloquent itu termasuk dari detail implementasi. Sehingga class yang manggil Repository dipaksa harus berinteraksi dengan Eloquent juga.
+Kesalahan yang sering terjadi, adalah ketika return value dari Repository berupa Eloquent. Hal itu menghilangkan konsep abstraksi dari Repository karena Eloquent itu termasuk dari detail implementasi. Sehingga class yang manggil Repository dipaksa harus berinteraksi dengan Eloquent juga. Padahal ga semua sumber data itu adalah Eloquent.
+
+> Note: Ketika suatu class bisa diganti dengan class lain karena kedua class tersebut punya parameter dan return value yang sama tanpa merusak aplikasi, itulah Liskov Substitution Principle dari SOLID... Ok, not so LSP karena tanpa superclass-subclass things.
 
 Jadi bukan begini
 ```
-class HargaDasarKamiBeliStorage
+class HargaDasarKamiBeliDatasource
 {
     public function getHargaDasarInGrams()
     {
@@ -200,7 +204,7 @@ class HargaDasarKamiBeliStorage
 
 tapi lebih baik kita mapping ke array. Sehingga kita tidak terikat dengan Eloquent.
 ```
-class HargaDasarKamiBeliStorage
+class HargaDasarKamiBeliDatasource
 {
     public function getHargaDasarInGrams()
     {
@@ -220,9 +224,9 @@ class HargaDasarKamiBeliStorage
 }
 ```
 
-Namun yang paling baik adalah kita mapping ke suatu class yang merepresentasikan bisnis aplikasi.
+Namun yang terbaik adalah kita mapping ke suatu class yang merepresentasikan bisnis aplikasi.
 ```
-class HargaDasarKamiBeliStorage
+class HargaDasarKamiBeliDatasource
 {
     public function getHargaDasarInGrams()
     {
@@ -238,7 +242,11 @@ class HargaDasarKamiBeliStorage
 }
 ```
 
-Dengan begini, nantinya, jika kita punya class baru yang punya method `getHargaDasarInGrams()` dan return value berupa array of `Emas`, kita bisa tukar class tersebut dengan `HargaDasarKamiBeliStorage`.  
+Dengan begini, jika kita punya class baru yang punya method `getHargaDasarInGrams()`, misal `HargaDasarKamiBeliDatasourceMongo` dan return value berupa array of `Emas`, kita swap implementasi pakai class baru tersebut.  
+
+> Note: Sejauh ini kita ga membahas `interface` apapun ketika membuat abstraksi. Seperti misal `interface HargaDasarKamiBeliDatasource` lalu ada class `HargaDasarKamiBeliSqlite` dan `HargaDasarKamiBeliMongo`.  
+Itu karena kita selalu pakai yang namanya **Duck Typing**, yaitu ketika kita menggunakan class yang bisa diganti-ganti dengan class lain karena class-class tersebut mempunyai method/behavior yang sama. Hanya berlaku di dynamic typing language seperti PHP atau Ruby.  
+Salah satu keuntungannya ya kita ga perlu repot-report bikin `interface` ya.
 
 ### Class Emas
 
@@ -281,7 +289,7 @@ class Emas
     }
 }
 
-class HargaDasarKamiBeliStorage
+class HargaDasarKamiBeliDatasource
 {
     public function getHargaDasarInGrams()
     {
@@ -300,7 +308,7 @@ class PriceList
 {
     public function getHargaInGrams()
     {
-        $storage = new HargaDasarKamiBeliStorage();
+        $storage = new HargaDasarKamiBeliDatasource();
         return $storage->getHargaDasarInGrams();
     }
 }
@@ -308,10 +316,10 @@ class PriceList
 
 Mari lanjut ke next requirement
 
-### Margin Calculator
+### Margin Calculator (IN PROGRESS)
 
 Requirement bilang kalau aplikasi ini harus menampilkan harga dasar yang sudah dihitung dengan margin.  
-Maka kita akan coba hitung margin dari harga dasar emas dari object `Emas` di `PriceList`.  
+Maka kita akan coba tambahkan margin dengan harga dasar emas dari object `Emas` di `PriceList`.  
 Margin ini seharusnya configurable, artinya bisa diubah oleh pemilik toko sewaktu-waktu. Jadi kita simpan aja margin tersebut di DB. Anggap aja ada halaman admin untuk ngeset margin tersebut, dan data margin sudah ada di DB.
 ```
 class PriceList
@@ -325,8 +333,7 @@ class PriceList
 
         $calculatedEmas = [];
         foreach ($emasList as $i => $emas) {
-            $hargaBaru = $emas->harga + $margin;
-            $calculatedEmas[] = new Emas($hargaBaru, $emas->gram);
+            $emasList[$i]->harga = $emas->harga + $margin;
         }
 
         return $calculatedEmas;
@@ -334,6 +341,85 @@ class PriceList
 }
 ```
 
+Adakah potensi masalah di kode baru tersebut?
 
+Mari kita tengok ulang class `PriceList` dan behavior `getHargaInGrams`.  
+Tujuan behavior itu adalah untuk mendapatkan harga dalam grams yang sudah dikalkulasikan dengan margin.  
+Namun di dalam method tersebut ada detail implementasi untuk menghitung harga emas dengan margin.  
+Memang masalahnya apa?  
+Bayangkan jika kita ingin menambahkan cara perhitungan margin yang baru, misalkan, dengan diskon. Apa yang akan kita lakukan?  
+
+1. Pakai `if`
+
+```
+public function getHargaInGrams()
+    {
+        $storage = new HargaDasarKamiBeliStorage();
+        $emasList = $storage->getHargaDasarInGrams();
+
+        $margin = $storage->getMargin();
+
+        $calculatedEmas = [];
+        foreach ($emasList as $i => $emas) {
+            if ($margin['nominal']) {
+                $emasList[$i]->harga = $emas->harga + $margin['nominal'];
+            }
+            if ($margin['discount']) {
+                $emasList[$i]->harga = $emas->harga - $margin['discount'];
+            }
+            
+        }
+
+        return $calculatedEmas;
+    }
+```
+
+Setiap ada perubahan di cara perhitungan margin, kita harus mengubah class `PriceList` dengan menambahkan kondisional.  
+
+2. Pakai better OO
+
+Behavior perhitungan harga dasar dengan margin kita serahkan ke class `Emas` dengan behavior `calculateHarga`, karena pada dasarnya, kita ingin mengubah attribute `harga` dari `Emas` kan?
+
+
+```
+class Emas
+{
+    public $harga;
+    pulic $gram;
+
+    public function __construct($harga, $gram)
+    {
+        $this->harga = $harga;
+        $this->gram = $gram;
+    }
+
+    public function calculateHarga($margin)
+    {
+        $this->harga += $margin;
+    }
+}
+
+class PriceList
+{
+    public function getHargaInGrams()
+    {
+        $storage = new HargaDasarKamiBeliStorage();
+        $emasList = $storage->getHargaDasarInGrams();
+
+        $margin = $storage->getMargin();
+
+        foreach ($emasList as $i => $emas) {
+            if ($margin['nominal']) {
+                $emasList[$i] = $emas->calculateHarga($margin['nominal']);
+            }
+            if ($margin['discount']) {
+                $emasList[$i] = $emas->calculateHarga($margin['discount']);
+            }
+        }
+
+        return $emasList;
+    }
+}
+```
 
 ![tobecon](tobecon.png)
