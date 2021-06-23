@@ -23,38 +23,22 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('/harga-kami-beli/{logamType}', function ($logamType, Request $request) {
-    if ($logamType == 'emas-certicard') {
-        $report = new PriceList(
-            new HargaDasarKamiBeliEmasCertiCardSqlite,
-            [
-                new PercentageMarginCalculator(new HargaDasarKamiBeliEmasCertiCardSqlite),
-                new NominalMarginCalculator(new HargaDasarKamiBeliEmasCertiCardSqlite)
-            ]
-        );
-    }
+Route::get('/harga-kami-beli/emas', function (Request $request) {
+    $priceList = new PriceList();
 
-    $emasPerGrams = $report->getHargaInGrams();
+    $hargaInGrams = $priceList->getHargaKamiBeliInGrams();
 
     return response()->json([
-        'data' => $emasPerGrams
+        'data' => $hargaInGrams
     ]);
 });
 
-Route::get('/harga-kami-jual/{logamType}', function ($logamType, Request $request) {
-    if ($logamType == 'emas-certicard') {
-        $report = new PriceList(
-            new HargaDasarKamiJualEmasCertiCardSqlite,
-            [
-                new PercentageMarginCalculator(new HargaDasarKamiJualEmasCertiCardSqlite),
-                new NominalMarginCalculator(new HargaDasarKamiJualEmasCertiCardSqlite)
-            ]
-        );
-    }
+Route::get('/harga-kami-jual/emas', function (Request $request) {
+    $priceList = new PriceList();
 
-    $emasPerGrams = $report->getHargaInGrams();
+    $hargaInGrams = $priceList->getHargaKamiJualInGrams();
 
     return response()->json([
-        'data' => $emasPerGrams
+        'data' => $hargaInGrams
     ]);
 });

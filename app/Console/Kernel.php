@@ -2,8 +2,8 @@
 
 namespace App\Console;
 
-use App\Console\Commands\ScrapHargaDasarKamiBeli;
-use App\Console\Commands\ScrapHargaDasarKamiJual;
+use App\Console\Commands\ScrapHargaKamiJual;
+use App\Console\Commands\ScrapHargaKamiBeli;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -15,8 +15,8 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        ScrapHargaDasarKamiBeli::class,
-        ScrapHargaDasarKamiJual::class,
+        ScrapHargaKamiBeli::class,
+        ScrapHargaKamiJual::class,
     ];
 
     /**

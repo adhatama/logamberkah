@@ -10,14 +10,14 @@ use Goutte\Client;
 use Illuminate\Console\Command;
 use Symfony\Component\DomCrawler\Crawler;
 
-class ScrapHargaDasarKamiJual extends Command
+class ScrapHargaKamiJual extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'scrap:harga-dasar-kami-jual';
+    protected $signature = 'scrap:harga-kami-jual';
 
     /**
      * The console command description.
@@ -43,7 +43,7 @@ class ScrapHargaDasarKamiJual extends Command
      */
     public function handle()
     {
-        $hargaKamiJualPerGrams = [
+        $hargaKamiJual = [
             ['gram' => 0.5, 'harga' => 0],
             ['gram' => 1, 'harga' => 0],
             ['gram' => 2, 'harga' => 0],
@@ -62,15 +62,14 @@ class ScrapHargaDasarKamiJual extends Command
         $crawler = $client->request('GET', 'https://www.logammulia.com/id/purchase/gold');
 
         $table = $crawler->filter('.ctd.item-2.n-1-2per3.n-540-1per3.n-768-1per5');
-        $table->each(function (Crawler $node, $i) use (&$hargaKamiJualPerGrams) {
+        $table->each(function (Crawler $node, $i) use (&$hargaKamiJual) {
             $text = $node->text();
             $textExploded = explode('Rp', $text);
             $textTrimmed = trim($textExploded[1]);
             $textNumber = (int) str_replace(',', '', $textTrimmed);
-            $hargaKamiJualPerGrams[$i]['harga'] = $textNumber;
+            $hargaKamiJual[$i]['harga'] = $textNumber;
         });
 
-        $storage = new HargaDasarKamiJualEmasCertiCardSqlite();
-        $storage->store(date('Y-m-d H:i'), $hargaKamiJualPerGrams);
+        file_put_contents(base_path() . '/harga_kami_jual.storage', json_encode($hargaKamiJual));
     }
 }

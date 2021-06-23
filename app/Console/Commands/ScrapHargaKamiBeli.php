@@ -2,22 +2,18 @@
 
 namespace App\Console\Commands;
 
-use App\Domains\HargaDasarKamiBeliEmasCertiCardSqlite;
-use App\Domains\RedisHargaDasarDataSource;
-use App\Domains\SqliteHargaDasarDataSource;
 use DOMDocument;
 use DOMXPath;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Redis;
 
-class ScrapHargaDasarKamiBeli extends Command
+class ScrapHargaKamiBeli extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'scrap:harga-dasar-kami-beli';
+    protected $signature = 'scrap:harga-kami-beli';
 
     /**
      * The console command description.
@@ -45,8 +41,11 @@ class ScrapHargaDasarKamiBeli extends Command
     {
         $hargaKamiBeli = $this->scrapPrice('https://www.logammulia.com/id/sell/gold', '//input[@id="valBasePrice"]/attribute::value');
 
-        $storage = new HargaDasarKamiBeliEmasCertiCardSqlite();
-        $storage->store(date('Y-m-d H:i'), [$hargaKamiBeli]);
+        $input = [
+            ['gram' => 1, 'harga' => $hargaKamiBeli]
+        ];
+
+        file_put_contents(base_path() . '/harga_kami_beli.storage', json_encode($input));
 
         return 0;
     }
@@ -57,7 +56,7 @@ class ScrapHargaDasarKamiBeli extends Command
 
         $doc = new DOMDocument();
 
-        libxml_use_internal_errors(TRUE);
+        libxml_use_internal_errors(true);
 
         if (!empty($html)) {
             $doc->loadHTML($html);
@@ -73,7 +72,7 @@ class ScrapHargaDasarKamiBeli extends Command
         return 0;
     }
 
-    function parseCurrency($strCurrency)
+    public function parseCurrency($strCurrency)
     {
         if (strpos($strCurrency, 'Rp') !== false) {
             $splitted = explode('Rp', $strCurrency);
@@ -84,7 +83,7 @@ class ScrapHargaDasarKamiBeli extends Command
     }
 
     // Solution came from here https://stackoverflow.com/a/19764699
-    function getAmount($money)
+    public function getAmount($money)
     {
         $cleanString = preg_replace('/([^0-9\.,])/i', '', $money);
         $onlyNumbersString = preg_replace('/([^0-9])/i', '', $money);
@@ -92,7 +91,7 @@ class ScrapHargaDasarKamiBeli extends Command
         $separatorsCountToBeErased = strlen($cleanString) - strlen($onlyNumbersString) - 1;
 
         $stringWithCommaOrDot = preg_replace('/([,\.])/', '', $cleanString, $separatorsCountToBeErased);
-        $removedThousandSeparator = preg_replace('/(\.|,)(?=[0-9]{3,}$)/', '',  $stringWithCommaOrDot);
+        $removedThousandSeparator = preg_replace('/(\.|,)(?=[0-9]{3,}$)/', '', $stringWithCommaOrDot);
 
         $val = (int) str_replace(',', '.', $removedThousandSeparator);
         $val = (int) round($val, 0);
