@@ -228,18 +228,20 @@ Emas 5 gram punya harga 500.000
 ```
 
 Dalam OO, ada satu konsep penting yaitu "message passing". Dalam implementasinya, "message passing" itu sama dengan "memanggil method".  
-Untuk dapat menerapkan OO yang lebih baik, kita harus berpikir "message" apa yang kita akan panggil untuk mendapatkan apa yang kita butuhkan.
-Dengan begitu, kita akan bisa fokus pada API (API bukan pada REST API) dan akan lebih aware dengan dependency.
+Untuk dapat menerapkan OO yang lebih baik, kita harus berpikir "message" apa yang kita akan panggil untuk mendapatkan apa yang kita butuhkan.  
+Dengan begitu, kita akan bisa fokus pada API (API bukan pada REST API, tapi mengacu ke method suatu class). Fokus pada API akan membuat kita lebih sadar akan behavior apa yang kita inginkan ketika memanggilnya.  
 
 Anggaplah untuk mendapatkan informasi di atas, kita butuh message `getHargaKamiBeliInGrams()` dan juga `getHargaKamiJualInGrams()`.  
 Lalu di class mana message itu ditulis?  
 Siapa yang akan manggil message itu?  
 
-Kalo kita bayangkan, yang biasanya dipakai untuk menampilkan harga toko kan semacam "menu" atau "price list" gitu kan ya.  
+Kalo kita bayangkan, yang biasanya dipakai untuk menampilkan harga toko kan semacam "menu" atau "price list" ya.  
 Kalo begitu kita buat saja class `PriceList` dengan behavior `getHargaKamiBeliInGrams()` dan `getHargaKamiJualInGrams()`.  
 
 Class `PriceList` bertujuan untuk menampilkan harga suatu barang, yang tentu akan menampilkan harga emas. Maka kita bisa buat class `Emas`.  
 Tiap satu batang emas, pasti ada berat `gram` dan `harga` nya.  
+Class `Emas` adalah bagaimana kita mengabstraksi suatu model di dunia nyata ke kode yang object-oriented.  
+Walaupun `Emas` tidak punya behavior
 
 Prakteknya, coba lihat bagian Route `api.php` dimana `PriceList` class dipanggil. Sebagai pemanggil, `api.php` tidak peduli dari mana data tersebut didapatkan. Yang pemanggil perlu peduli adalah apa yang pemanggil inginkan: harga kami beli atau harga kami jual.  
 
@@ -268,4 +270,4 @@ Beberapa orang pasti menjawab agar kode lebih clean (What is CLEAN?), mudah diba
 
 Namun ketika kita ditantang untuk menjelaskan sampai ke implementasi, seringkali kita masih sulit menjelaskan.
 
-Tantangan yang dapat menjawab pertanyaan itu adalah ketika perubahan datang di part selanjutnya.
+Tantangan yang dapat menjawab pertanyaan itu adalah ketika perubahan requirement datang.
