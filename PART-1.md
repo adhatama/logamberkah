@@ -3,7 +3,8 @@
 ### Requirement Pertama 
 
 ```
-Aku (Pemilik toko) butuh aplikasi yang bisa nampilin harga emas hari ini yang diambil dari situs resmi Antam: logammulia.com
+Aku (Pemilik toko) butuh aplikasi yang bisa nampilin harga emas hari
+ini yang diambil dari situs resmi Antam: logammulia.com
 ```
 
 Sebagai developer, tentu kita akan ~~langsung gas coding~~ menterjemahkan requirement tersebut ke suatu desain sehingga kita paham betul apa yang mau kita buat sebelum ngoding. Kali ini desainnya seperti ini:

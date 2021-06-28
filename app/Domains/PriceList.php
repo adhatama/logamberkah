@@ -47,7 +47,9 @@ class PriceList
 
         $emasList = [];
         foreach ($hargaInGrams as $row) {
-            $emasList[] = new Emas($row['gram'], $row['harga']);
+            $emas = new Emas($row['gram'], $row['harga'], [new NominalMarginCalculator(), new PercentageMarginCalculator()]);
+            $emas->applyMargin();
+            $emasList[] = $emas;
         }
 
         return $emasList;
@@ -64,7 +66,13 @@ class PriceList
 
         $emasList = [];
         foreach ($hargaKamiJual as $row) {
-            $emasList[] = new Emas($row['gram'], $row['harga']);
+            $emas = new Emas(
+                $row['gram'],
+                $row['harga'],
+                [new NominalMarginCalculator(), new PercentageMarginCalculator(), new DiscountMarginCalculator()]
+            );
+            $emas->applyMargin();
+            $emasList[] = $emas;
         }
 
         return $emasList;
@@ -75,8 +83,9 @@ class PriceList
         $json = [];
         foreach ($emasList as $emas) {
             $json[] = [
-                'gram' => $emas->gram,
-                'harga' => $emas->harga,
+                'gram' => $emas->getGram(),
+                'harga' => $emas->getHarga(),
+                'margin' => $emas->getMargin(),
             ];
         }
 
