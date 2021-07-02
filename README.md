@@ -6,6 +6,8 @@ Harga dasar emas ngambil dari situs resmi Antam: logammulia.com.
 
 Tapi tujuan aplikasi ini di-open source kan sebenernya adalah untuk menunjukkan **a better way to do Object Oriented**, khususnya di PHP.
 
+Sudah ada plan untuk versi Golang setelah versi PHP ini selesai.
+
 ## Tech Stack
 
 - PHP 7.2 <= n < 8.x
