@@ -19,6 +19,12 @@ Sudah ada plan untuk versi Golang setelah versi PHP ini selesai.
 - Clone terus run pakai `php artisan serve`
 - Ga perlu setup DB. Pakai aja yang di `logamberkah.sqlite`
 
+## Branching
+
+- Branch `master` akan diupdate seiring berjalannya progress artikel
+- Untuk hasil akhir kode, bisa dilihat pada tag `v0.2`.
+  - Versi `v0.2` kemungkinan akan berbeda dengan progress artikel karena ada insight baru
+
 ## Testing
 
 - Biasa aja pakai `./vendor/bin/phpunit`
